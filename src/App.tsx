@@ -813,7 +813,7 @@ const App: React.FC = () => {
                         left: generatingPdf && !showCharts ? '-9999px' : 'auto',
                         top: generatingPdf && !showCharts ? '0' : 'auto'
                       }}>
-                        {(showCharts || generatingPdf) && (
+                        {(showCharts || generatingPdf) && analysis.address && (
                         <>
                           <Box sx={{ mb: 4 }} data-chart="balance-history">
                             <WalletCredibilityChart
@@ -840,11 +840,11 @@ const App: React.FC = () => {
                     {!isEmptyWallet && (
                       <Box sx={{ mb: 4 }}>
                         <Typography variant="h6" gutterBottom>
-                          Risk Score: {(analysis.risk_score * 100).toFixed(1)}%
+                          Risk Score: {((analysis.risk_score || 0) * 100).toFixed(1)}%
                         </Typography>
                         <LinearProgress 
                           variant="determinate" 
-                          value={analysis.risk_score * 100}
+                          value={(analysis.risk_score || 0) * 100}
                           sx={{ 
                             height: 12,
                             borderRadius: 2,
@@ -1138,8 +1138,8 @@ const App: React.FC = () => {
                       mb: 4 
                     }}>
                       {[
-                        { label: 'Address', value: `${analysis.address.substring(0, 12)}...${analysis.address.slice(-8)}`, icon: 'location_on', gradient: 'linear-gradient(45deg, #2563eb, #0891b2)' },
-                        { label: 'Confidence', value: isEmptyWallet ? 'N/A' : `${(analysis.confidence * 100).toFixed(1)}%`, icon: 'verified', gradient: 'linear-gradient(45deg, #059669, #10b981)' },
+                        { label: 'Address', value: analysis.address ? `${analysis.address.substring(0, 12)}...${analysis.address.slice(-8)}` : 'N/A', icon: 'location_on', gradient: 'linear-gradient(45deg, #2563eb, #0891b2)' },
+                        { label: 'Confidence', value: isEmptyWallet ? 'N/A' : `${((analysis.confidence || 0) * 100).toFixed(1)}%`, icon: 'verified', gradient: 'linear-gradient(45deg, #059669, #10b981)' },
                         { label: 'Transactions', value: isEmptyWallet ? 'N/A' : (analysis.analysis_summary?.transaction_count || 0).toLocaleString(), icon: 'trending_up', gradient: 'linear-gradient(45deg, #dc2626, #ef4444)' },
                         { label: 'Balance', value: isEmptyWallet ? 'N/A' : `${(analysis.analysis_summary?.current_balance_btc || 0).toFixed(8)} BTC`, icon: 'account_balance_wallet', gradient: 'linear-gradient(45deg, #7c3aed, #a855f7)' }
                       ].map((metric, index) => (
