@@ -45,7 +45,7 @@ import {
 } from '@mui/icons-material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { lightTheme, darkTheme } from './themes';
-import { SecureTraceNav } from './components/SecureTraceNav';
+import { SecureTraceNav, PageWrapper } from './components/SecureTraceNav';
 import { BitScanAPI } from './services/api';
 import type { AnalysisResponse } from './types/api';
 import { downloadPdfReportWithCharts } from './utils/reportGenerator';
@@ -176,40 +176,9 @@ const App: React.FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-        <CssBaseline />
-
-        {/* BitScan immersive grid background */}
-        <Box
-          sx={{
-            minHeight: '100vh',
-            background: isDarkMode ? '#0d1629' : '#f8fafc',
-            backgroundImage: isDarkMode 
-              ? `
-                linear-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 99, 235, 0.08) 1px, transparent 1px)
-              `
-              : `
-                linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px)
-              `,
-            backgroundSize: '80px 80px',
-            position: 'relative',
-            transition: 'all 0.3s ease',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: isDarkMode 
-                ? 'radial-gradient(ellipse at top left, rgba(79, 141, 245, 0.2) 0%, transparent 60%), radial-gradient(ellipse at bottom right, rgba(14, 116, 144, 0.18) 0%, transparent 65%)'
-                : 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
-              pointerEvents: 'none'
-            }
-          }}
-        >
+<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+  <CssBaseline />
+  <PageWrapper>
           <SecureTraceNav
             isDarkMode={isDarkMode}
             onToggleTheme={() => setIsDarkMode((prev) => !prev)}
@@ -248,9 +217,9 @@ const App: React.FC = () => {
                       variant="h2"
                       component="h1"
                       sx={{
-                        fontSize: { xs: '2.6rem', md: '3.5rem' },
+                        fontSize: { xs: '1.75rem', sm: '2.2rem', md: '3.5rem' },
                         fontWeight: 700,
-                        lineHeight: 1.08,
+                        lineHeight: { xs: 1.2, md: 1.08 },
                         background: 'linear-gradient(120deg, #60a5fa 0%, #38bdf8 60%, #22d3ee 100%)',
                         backgroundClip: 'text',
                         WebkitBackgroundClip: 'text',
@@ -265,7 +234,7 @@ const App: React.FC = () => {
                         mt: 2,
                         maxWidth: 520,
                         color: isDarkMode ? 'rgba(203, 213, 225, 0.75)' : 'rgba(30, 41, 59, 0.72)',
-                        fontSize: '1.05rem',
+                        fontSize: { xs: '0.9rem', sm: '0.95rem', md: '1.05rem' },
                         lineHeight: 1.7
                       }}
                     >
@@ -290,8 +259,9 @@ const App: React.FC = () => {
                     <Paper
                       key={index}
                       sx={{
-                        p: 3,
-                        minWidth: 180,
+                        p: { xs: 2, md: 3 },
+                        minWidth: { xs: 140, sm: 160, md: 180 },
+                        flex: { xs: '1 1 calc(33.333% - 16px)', sm: '0 1 auto' },
                         textAlign: 'center',
                         background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.9)',
                         backdropFilter: 'blur(10px)',
@@ -333,10 +303,10 @@ const App: React.FC = () => {
                 backdropFilter: 'blur(12px)',
               }}
             >
-              <Typography variant="h4" sx={{ fontWeight: 600, mb: 1.5 }}>
+              <Typography variant="h4" sx={{ fontWeight: 600, mb: 1.5, fontSize: { xs: '1.5rem', md: '2.125rem' } }}>
                 Reports & Evidence Packs
               </Typography>
-              <Typography variant="body1" sx={{ maxWidth: 720, color: isDarkMode ? 'rgba(226, 232, 240, 0.78)' : 'rgba(30, 41, 59, 0.7)' }}>
+              <Typography variant="body1" sx={{ maxWidth: 720, fontSize: { xs: '0.9rem', md: '1rem' }, color: isDarkMode ? 'rgba(226, 232, 240, 0.78)' : 'rgba(30, 41, 59, 0.7)' }}>
                 Export BitScan assessments with charts, counterparties, and timeline evidence in one click. Use this section to trigger PDF generation, shareable links, or integrate with your workflow tools.
               </Typography>
             </Box>
@@ -352,11 +322,12 @@ const App: React.FC = () => {
                   bottom: 0,
                   background: 'rgba(0, 0, 0, 0.5)',
                   backdropFilter: 'blur(8px)',
-                  zIndex: 1300,
+                  zIndex: 1000,
                   display: 'flex',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   justifyContent: 'center',
-                  p: 2
+                  p: 2,
+                  pt: { xs: 11, md: 13 }
                 }}>
                   <Card sx={{ 
                     maxWidth: 800,
@@ -365,33 +336,34 @@ const App: React.FC = () => {
                     background: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.95)',
                     backdropFilter: 'blur(25px)',
                     border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '25px',
+                    borderRadius: { xs: '16px', md: '25px' },
                     boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
                     overflow: 'auto'
                   }}>
-                    <CardContent sx={{ p: 4, height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography variant="h5" sx={{ fontWeight: 600, fontFamily: '"Inter", "Roboto", sans-serif' }}>
-                          <HistoryIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 }, height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, md: 3 }, flexWrap: 'wrap', gap: 1 }}>
+                        <Typography variant="h5" sx={{ fontWeight: 600, fontSize: { xs: '1.25rem', md: '1.5rem' }, fontFamily: '"Inter", "Roboto", sans-serif' }}>
+                          <HistoryIcon sx={{ mr: 1, verticalAlign: 'middle', fontSize: { xs: '1.25rem', md: 'inherit' } }} />
                           Scan History ({scanHistory.length}/10)
                         </Typography>
-                        <Box>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
                           {scanHistory.length > 0 && (
                             <Button
                               onClick={clearHistory}
-                              startIcon={<ClearIcon />}
+                              startIcon={<ClearIcon sx={{ display: { xs: 'none', sm: 'block' } }} />}
                               sx={{
                                 color: '#ef4444',
                                 borderColor: '#ef4444',
+                                fontSize: { xs: '0.8rem', md: '0.875rem' },
+                                px: { xs: 1.5, md: 2 },
                                 '&:hover': {
                                   background: 'rgba(239, 68, 68, 0.1)',
                                   borderColor: '#dc2626'
-                                },
-                                mr: 1
+                                }
                               }}
                               variant="outlined"
                             >
-                              Clear History
+                              {window.innerWidth < 600 ? 'Clear' : 'Clear History'}
                             </Button>
                           )}
                           <IconButton
@@ -490,11 +462,12 @@ const App: React.FC = () => {
                   bottom: 0,
                   background: 'rgba(0, 0, 0, 0.5)',
                   backdropFilter: 'blur(8px)',
-                  zIndex: 1400,
+                  zIndex: 1000,
                   display: 'flex',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   justifyContent: 'center',
-                  p: 2
+                  p: 2,
+                  pt: { xs: 11, md: 13 }
                 }}>
                   <Card sx={{
                     maxWidth: 900,
@@ -503,21 +476,25 @@ const App: React.FC = () => {
                     background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)',
                     backdropFilter: 'blur(25px)',
                     border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '25px',
+                    borderRadius: { xs: '16px', md: '25px' },
                     boxShadow: isDarkMode ? '0 25px 50px rgba(0, 0, 0, 0.5)' : '0 25px 50px rgba(0, 0, 0, 0.15)',
-                    overflow: 'hidden'
+                    overflow: 'auto'
                   }}>
-                    <CardContent sx={{ p: 4, height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography variant="h5" sx={{ fontWeight: 600, fontFamily: '"Inter", "Roboto", sans-serif' }}>
-                          <AnalyticsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 }, height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, md: 3 } }}>
+                        <Typography variant="h5" sx={{ fontWeight: 600, fontSize: { xs: '1.25rem', md: '1.5rem' }, fontFamily: '"Inter", "Roboto", sans-serif' }}>
+                          <AnalyticsIcon sx={{ mr: 1, verticalAlign: 'middle', fontSize: { xs: '1.25rem', md: 'inherit' } }} />
                           How we analyze Bitcoin wallets (Our approach)
                         </Typography>
                         <IconButton
                           onClick={() => setShowApproach(false)}
                           sx={{
-                            color: 'text.secondary',
-                            '&:hover': { background: 'rgba(0, 0, 0, 0.1)', transform: 'scale(1.1)' }
+                            color: 'text.primary',
+                            background: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                            '&:hover': { 
+                              background: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)', 
+                              transform: 'scale(1.1)' 
+                            }
                           }}
                         >
                           <CloseIcon />
@@ -535,7 +512,7 @@ const App: React.FC = () => {
                           '• Real-time Validation: We query live blockchain data to verify current address status, recent transactions, and counterparty risk to ensure up-to-date analysis.',
                           '• Continuous Improvement: Our models are regularly retrained on new data, with performance tracked via F1 score, ROC-AUC, and other metrics to minimize false positives/negatives.'
                         ].map((line, idx) => (
-                          <Typography key={idx} variant="body1" sx={{ mb: 1, fontFamily: '"Inter", "Roboto", sans-serif', lineHeight: 1.6 }}>
+                          <Typography key={idx} variant="body1" sx={{ mb: 1, fontSize: { xs: '0.875rem', md: '1rem' }, fontFamily: '"Inter", "Roboto", sans-serif', lineHeight: 1.6 }}>
                             {line}
                           </Typography>
                         ))}
@@ -549,11 +526,11 @@ const App: React.FC = () => {
             {/* Analysis Form */}
             <Slide in timeout={1400}>
               <Card sx={{ 
-                mb: 4, 
+                mb: { xs: 3, md: 4 }, 
                 background: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.95)',
                 backdropFilter: 'blur(25px)',
                 border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)',
-                borderRadius: '25px',
+                borderRadius: { xs: '16px', md: '25px' },
                 boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05)',
                 transition: 'all 0.4s ease',
                 '&:hover': {
@@ -561,11 +538,12 @@ const App: React.FC = () => {
                   boxShadow: '0 35px 70px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)'
                 }
               }}>
-                <CardContent sx={{ p: 5 }}>
+                <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
                   <Typography variant="h4" gutterBottom sx={{ 
                     textAlign: 'center', 
-                    mb: 4,
+                    mb: { xs: 3, md: 4 },
                     fontWeight: 600,
+                    fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.125rem' },
                     color: 'text.primary',
                     fontFamily: '"Inter", "Roboto", sans-serif'
                   }}>
@@ -573,7 +551,7 @@ const App: React.FC = () => {
                   </Typography>
                   
                   <Box sx={{ maxWidth: 700, mx: 'auto' }}>
-                    <Box sx={{ display: 'flex', gap: 3, mb: 4, flexDirection: { xs: 'column', md: 'row' } }}>
+                    <Box sx={{ display: 'flex', gap: { xs: 2, md: 3 }, mb: { xs: 3, md: 4 }, flexDirection: { xs: 'column', sm: 'row' } }}>
                       <TextField
                         fullWidth
                         label="Bitcoin Address"
@@ -589,7 +567,7 @@ const App: React.FC = () => {
                             border: '2px solid transparent',
                             backgroundClip: 'padding-box',
                             transition: 'all 0.3s ease',
-                            fontSize: '1.1rem',
+                            fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
                             '&:hover': {
                               background: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 1)',
                               transform: 'translateY(-2px)',
@@ -603,7 +581,7 @@ const App: React.FC = () => {
                             '& fieldset': { border: 'none' }
                           },
                           '& .MuiInputLabel-root': {
-                            fontSize: '1.1rem',
+                            fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
                             fontWeight: 500
                           }
                         }}
@@ -614,12 +592,12 @@ const App: React.FC = () => {
                         disabled={loading || !address}
                         startIcon={loading ? null : <SearchIcon />}
                         sx={{
-                          minWidth: 160,
-                          height: 60,
+                          minWidth: { xs: '100%', sm: 140, md: 160 },
+                          height: { xs: 50, md: 60 },
                           borderRadius: '20px',
                           background: 'linear-gradient(45deg, #2563eb 0%, #0891b2 50%, #06b6d4 100%)',
                           boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)',
-                          fontSize: '1.1rem',
+                          fontSize: { xs: '0.95rem', md: '1.1rem' },
                           fontWeight: 700,
                           textTransform: 'none',
                           '&:hover': {
@@ -1217,11 +1195,12 @@ const App: React.FC = () => {
                   bottom: 0,
                   background: 'rgba(0, 0, 0, 0.5)',
                   backdropFilter: 'blur(8px)',
-                  zIndex: 1300,
+                  zIndex: 1000,
                   display: 'flex',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   justifyContent: 'center',
-                  p: 2
+                  p: 2,
+                  pt: { xs: 11, md: 13 }
                 }}>
                   <Card sx={{ 
                     maxWidth: 800,
@@ -1234,10 +1213,10 @@ const App: React.FC = () => {
                     boxShadow: isDarkMode ? '0 25px 50px rgba(0, 0, 0, 0.5)' : '0 25px 50px rgba(0, 0, 0, 0.15)',
                     overflow: 'auto'
                   }}>
-                    <CardContent sx={{ p: 4, height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography variant="h5" sx={{ fontWeight: 600, fontFamily: '"Inter", "Roboto", sans-serif' }}>
-                          <HelpIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 }, height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 2, md: 3 } }}>
+                        <Typography variant="h5" sx={{ fontWeight: 600, fontSize: { xs: '1.25rem', md: '1.5rem' }, fontFamily: '"Inter", "Roboto", sans-serif' }}>
+                          <HelpIcon sx={{ mr: 1, verticalAlign: 'middle', fontSize: { xs: '1.25rem', md: 'inherit' } }} />
                           Frequently Asked Questions
                         </Typography>
                         <Box>
@@ -1402,8 +1381,8 @@ const App: React.FC = () => {
                 </Box>
               </Fade>
             )}
-          </Container>
-        </Box>
+     </Container>
+        </PageWrapper>
       </ThemeProvider>
     </QueryClientProvider>
   );
