@@ -72,7 +72,7 @@ const App: React.FC = () => {
   const [showCharts, setShowCharts] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState(false);
   const isEmptyWallet = useMemo(() => {
-    if (!analysis) return false;
+    if (!analysis || !analysis.analysis_summary) return false;
     const summary = analysis.analysis_summary;
     return summary.transaction_count === 0 &&
       summary.total_received_btc === 0 &&
@@ -920,21 +920,21 @@ const App: React.FC = () => {
                                       secondary="Transactions with reputable exchanges and legitimate services"
                                     />
                                   </ListItem>
-                                  {analysis.analysis_summary.transaction_count > 10 && (
+                                  {analysis.analysis_summary?.transaction_count > 10 && (
                                     <ListItem>
                                       <ListItemIcon><CheckCircleIcon sx={{ color: '#059669', fontSize: 20 }} /></ListItemIcon>
                                       <ListItemText 
                                         primary="Established Transaction History" 
-                                        secondary={`${analysis.analysis_summary.transaction_count} transactions show consistent, legitimate usage patterns`}
+                                        secondary={`${analysis.analysis_summary?.transaction_count} transactions show consistent, legitimate usage patterns`}
                                       />
                                     </ListItem>
                                   )}
-                                  {analysis.analysis_summary.current_balance_btc > 0 && (
+                                  {analysis.analysis_summary?.current_balance_btc > 0 && (
                                     <ListItem>
                                       <ListItemIcon><CheckCircleIcon sx={{ color: '#059669', fontSize: 20 }} /></ListItemIcon>
                                       <ListItemText 
                                         primary="Active Wallet Status" 
-                                        secondary={`Maintains balance of ${analysis.analysis_summary.current_balance_btc.toFixed(8)} BTC indicating active, legitimate use`}
+                                        secondary={`Maintains balance of ${(analysis.analysis_summary?.current_balance_btc || 0).toFixed(8)} BTC indicating active, legitimate use`}
                                       />
                                     </ListItem>
                                   )}
@@ -989,7 +989,7 @@ const App: React.FC = () => {
                                         secondary="Transactions with known mixing services, darknet markets, or flagged addresses"
                                       />
                                     </ListItem>
-                                    {analysis.analysis_summary.transaction_count < 5 && (
+                                    {analysis.analysis_summary?.transaction_count < 5 && (
                                       <ListItem>
                                         <ListItemIcon><WarningIcon sx={{ color: '#dc2626', fontSize: 20 }} /></ListItemIcon>
                                         <ListItemText 
@@ -1140,8 +1140,8 @@ const App: React.FC = () => {
                       {[
                         { label: 'Address', value: `${analysis.address.substring(0, 12)}...${analysis.address.slice(-8)}`, icon: 'location_on', gradient: 'linear-gradient(45deg, #2563eb, #0891b2)' },
                         { label: 'Confidence', value: isEmptyWallet ? 'N/A' : `${(analysis.confidence * 100).toFixed(1)}%`, icon: 'verified', gradient: 'linear-gradient(45deg, #059669, #10b981)' },
-                        { label: 'Transactions', value: isEmptyWallet ? 'N/A' : analysis.analysis_summary.transaction_count.toLocaleString(), icon: 'trending_up', gradient: 'linear-gradient(45deg, #dc2626, #ef4444)' },
-                        { label: 'Balance', value: isEmptyWallet ? 'N/A' : `${analysis.analysis_summary.current_balance_btc.toFixed(8)} BTC`, icon: 'account_balance_wallet', gradient: 'linear-gradient(45deg, #7c3aed, #a855f7)' }
+                        { label: 'Transactions', value: isEmptyWallet ? 'N/A' : (analysis.analysis_summary?.transaction_count || 0).toLocaleString(), icon: 'trending_up', gradient: 'linear-gradient(45deg, #dc2626, #ef4444)' },
+                        { label: 'Balance', value: isEmptyWallet ? 'N/A' : `${(analysis.analysis_summary?.current_balance_btc || 0).toFixed(8)} BTC`, icon: 'account_balance_wallet', gradient: 'linear-gradient(45deg, #7c3aed, #a855f7)' }
                       ].map((metric, index) => (
                         <Paper
                           key={index}
